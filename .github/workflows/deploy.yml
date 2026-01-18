@@ -62,7 +62,7 @@ jobs:
         run: echo '${{ secrets.PLAY_AUTH_JSON }}' > service_account.json
 
       - name: Deploy Bundle to Google Play
-        uses: roadkll/upload-google-play@1.1.3
+        uses: r0adkll/upload-google-play@1.1.3
         with:
           serviceAccountJson: service_account.json
           packageName: com.alvinfungai.flower
