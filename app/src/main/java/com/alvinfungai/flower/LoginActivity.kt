@@ -38,7 +38,7 @@ class LoginActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnGithub).setOnClickListener {
             Log.d("AUTH", "onCreate: clicked")
             // Observe session changes
-            observeAuthState()
+             observeAuthState()
         }
     }
 

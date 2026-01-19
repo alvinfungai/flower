@@ -27,13 +27,17 @@ class MainActivity : AppCompatActivity() {
         val user = supabase.auth.currentUserOrNull()
 
         textViewGreeting = findViewById<TextView>(R.id.textViewGreeting)
-        textViewGreeting.text = "Welcome, ${user?.email}"
+        textViewGreeting.text = "Welcome, ${user?.email ?: "alvin.fungai@gmail.com"}"
         findViewById<Button>(R.id.btnLogout).setOnClickListener {
             lifecycleScope.launch {
                 supabase.auth.signOut()
-                startActivity(Intent(this@MainActivity, LoginActivity::class.java))
-                finish()
+                logout()
             }
         }
+    }
+
+    private fun logout() {
+        startActivity(Intent(this@MainActivity, LoginActivity::class.java))
+        finish()
     }
 }
