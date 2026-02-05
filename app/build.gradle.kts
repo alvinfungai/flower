@@ -4,6 +4,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 // Helper function to load local.properties
@@ -13,7 +14,7 @@ fun getLocalProperties(): Properties {
     if (localPropertiesFile.exists()) {
         localPropertiesFile.inputStream().use { properties.load(it) }
     } else {
-        // Optional: Handle case where file is missing (e.g., throw an exception or return empty)
+        // Handle case where file is missing, can throw an exception or return empty
         println("WARNING: local.properties file not found")
     }
     return properties
@@ -74,6 +75,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.recyclerview)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -83,4 +85,14 @@ dependencies {
     implementation(platform(libs.bom))
     implementation(libs.postgrest.kt)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.serialization.json)
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.coil.kt)
+    implementation(libs.coil.network.okhttp)
+    implementation(libs.circleimageview)
+    implementation(libs.core.splashscreen)
+
+    // Jetpack Navigation for Fragments (View-based)
+    implementation(libs.navigation.fragment.ktx)
+    implementation(libs.navigation.ui.ktx)
 }

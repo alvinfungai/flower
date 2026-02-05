@@ -6,4 +6,12 @@
     </style>
 
     <style name="Theme.Flower" parent="Base.Theme.Flower" />
+
+    <!--
+       The Splash Screen API requires a specific theme to prevent the app from showing a blank screen during the cold start
+    -->
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#FFFFFF</item>
+        <item name="postSplashScreenTheme">@style/Theme.Flower</item>
+    </style>
 </resources>
