@@ -1,1 +1,3 @@
-Initial release
+- Added create, read, update and delete features for projects
+- Added a profile feature for users to showcase their work
+- UI improvements including bottom navigation
