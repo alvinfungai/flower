@@ -1,10 +1,12 @@
-package com.alvinfungai.flower
+package com.alvinfungai.flower.ui.auth
 
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.alvinfungai.flower.R
+import com.alvinfungai.flower.data.remote.SupabaseClientProvider
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.Github
 import kotlinx.coroutines.launch

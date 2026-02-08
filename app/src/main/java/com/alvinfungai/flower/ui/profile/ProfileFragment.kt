@@ -1,4 +1,4 @@
-package com.alvinfungai.flower
+package com.alvinfungai.flower.ui.profile
 
 import android.os.Bundle
 import android.util.Log
@@ -12,6 +12,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil3.load
+import com.alvinfungai.flower.ui.common.ProjectsAdapter
+import com.alvinfungai.flower.R
+import com.alvinfungai.flower.data.model.Profile
+import com.alvinfungai.flower.data.model.Project
+import com.alvinfungai.flower.data.remote.SupabaseClientProvider
 import de.hdodenhof.circleimageview.CircleImageView
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.from
@@ -71,7 +76,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                             putString("project_id", project.id)
                         }
                         // nav
-                        findNavController().navigate(R.id.action_profileFragment_to_projectDetailFragment, bundle)
+                        findNavController().navigate(
+                            R.id.action_profileFragment_to_projectDetailFragment,
+                            bundle
+                        )
                     }
                     projectsRecyclerView.adapter = adapter
                 }

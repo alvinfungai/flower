@@ -1,8 +1,12 @@
-package com.alvinfungai.flower
+package com.alvinfungai.flower.ui.profile
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alvinfungai.flower.data.model.Project
+import com.alvinfungai.flower.data.model.ProjectWithTech
+import com.alvinfungai.flower.data.remote.SupabaseClientProvider
+import com.alvinfungai.flower.ui.common.UiState
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
 import kotlinx.coroutines.Dispatchers
@@ -10,7 +14,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-
 
 class ProjectDetailViewModel : ViewModel() {
     private val supabase = SupabaseClientProvider.client
@@ -23,7 +26,7 @@ class ProjectDetailViewModel : ViewModel() {
             try {
                 // Fetch project with technologies
                 val project = supabase.from("projects")
-                    .select(columns = Columns.raw("*, technologies(*)")) {
+                    .select(columns = Columns.Companion.raw("*, technologies(*)")) {
                         filter { Project::id eq projectId }
                     }.decodeSingle<ProjectWithTech>()
                 _state.value = UiState.Success(project)
@@ -52,11 +55,4 @@ class ProjectDetailViewModel : ViewModel() {
             }
         }
     }
-}
-
-// Helper sealed class for UI states
-sealed class UiState<out T> {
-    object Loading : UiState<Nothing>()
-    data class Success<T>(val data: T) : UiState<T>()
-    data class Error(val message: String) : UiState<Nothing>()
 }

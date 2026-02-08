@@ -1,4 +1,4 @@
-package com.alvinfungai.flower
+package com.alvinfungai.flower.ui.project.home
 
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +8,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.alvinfungai.flower.ui.common.ProjectsAdapter
+import com.alvinfungai.flower.R
+import com.alvinfungai.flower.data.model.Project
+import com.alvinfungai.flower.data.remote.SupabaseClientProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.launch
@@ -38,7 +42,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     }
 
                     // Navigate using the Action ID and the bundle
-                    findNavController().navigate(R.id.action_homeFragment_to_projectDetailFragment, bundle)
+                    findNavController().navigate(
+                        R.id.action_homeFragment_to_projectDetailFragment,
+                        bundle
+                    )
                 }
                 Log.d("PROJECTS", "fetchUserPosts: $projects")
             } catch (e: Exception) {

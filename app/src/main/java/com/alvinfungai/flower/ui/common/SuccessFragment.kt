@@ -1,10 +1,11 @@
-package com.alvinfungai.flower
+package com.alvinfungai.flower.ui.common
 
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.alvinfungai.flower.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

@@ -1,6 +1,7 @@
-package com.alvinfungai.flower
+package com.alvinfungai.flower.data.remote
 
 import android.content.Context
+import com.alvinfungai.flower.BuildConfig
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.auth.FlowType
@@ -17,12 +18,12 @@ object SupabaseClientProvider {
             supabaseUrl = BuildConfig.SUPABASE_URL,
             supabaseKey = BuildConfig.SUPABASE_ANON_KEY
         ) {
-            install(Auth) {
+            install(Auth.Companion) {
                 flowType = FlowType.PKCE
                 scheme = "myapp"
                 host = "auth"
             }
-            install(Postgrest)
+            install(Postgrest.Companion)
         }
     }
 }

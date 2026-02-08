@@ -1,13 +1,13 @@
-package com.alvinfungai.flower
+package com.alvinfungai.flower.ui.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alvinfungai.flower.data.remote.SupabaseClientProvider
 import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-
 
 class MainViewModel : ViewModel() {
     private val _state = MutableStateFlow<AuthState>(AuthState.Loading)
@@ -33,4 +33,3 @@ class MainViewModel : ViewModel() {
         object Unauthenticated : AuthState()
     }
 }
-
