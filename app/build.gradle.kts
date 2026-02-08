@@ -95,4 +95,14 @@ dependencies {
     // Jetpack Navigation for Fragments (View-based)
     implementation(libs.navigation.fragment.ktx)
     implementation(libs.navigation.ui.ktx)
+
+    // For mocking Supabase/Repository
+    testImplementation("io.mockk:mockk:1.13.5")
+
+    // For testing StateFlow
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
+
+    // to test Flow streams
+    testImplementation("app.cash.turbine:turbine:1.0.0")
+
 }

@@ -1,4 +1,4 @@
-package com.alvinfungai.flower
+package com.alvinfungai.flower.data.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

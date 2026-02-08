@@ -1,23 +1,26 @@
-package com.alvinfungai.flower
+package com.alvinfungai.flower.ui.project.detail
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.alvinfungai.flower.ui.profile.ProjectDetailViewModel
+import com.alvinfungai.flower.R
+import com.alvinfungai.flower.data.remote.SupabaseClientProvider
+import com.alvinfungai.flower.ui.common.UiState
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.launch
-
 
 class ProjectDetailFragment : Fragment(R.layout.fragment_project_detail) {
     private val supabase = SupabaseClientProvider.client

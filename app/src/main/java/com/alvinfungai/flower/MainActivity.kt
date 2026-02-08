@@ -16,6 +16,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.alvinfungai.flower.data.remote.SupabaseClientProvider
+import com.alvinfungai.flower.ui.auth.MainViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import io.github.jan.supabase.auth.handleDeeplinks
 import kotlinx.coroutines.launch

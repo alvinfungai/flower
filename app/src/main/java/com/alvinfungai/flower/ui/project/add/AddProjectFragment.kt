@@ -1,13 +1,21 @@
-package com.alvinfungai.flower
+package com.alvinfungai.flower.ui.project.add
 
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.alvinfungai.flower.R
+import com.alvinfungai.flower.data.model.Project
+import com.alvinfungai.flower.data.model.Technology
+import com.alvinfungai.flower.data.remote.SupabaseClientProvider
+import com.alvinfungai.flower.ui.common.UiState
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import io.github.jan.supabase.auth.auth
@@ -15,8 +23,9 @@ import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.launch
 
 class AddProjectFragment : Fragment(R.layout.fragment_add_project) { // Standard way to provide layout
-    private val supabase = SupabaseClientProvider.client
 
+    private val supabase = SupabaseClientProvider.client
+    private val viewModel: AddProjectViewModel by viewModels()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -28,24 +37,28 @@ class AddProjectFragment : Fragment(R.layout.fragment_add_project) { // Standard
         val buttonSaveProject = view.findViewById<Button>(R.id.btn_save_project)
 
         // 1. Load technologies from Supabase
+        viewModel.fetchProjectTechnologies()
         lifecycleScope.launch {
             try {
-                val techList = supabase.from("technologies").select().decodeList<Technology>()
-
-                // Ensure fragment is still active before touching UI
-                val context = context ?: return@launch
-
-                techList.forEach { tech ->
-                    val chip = Chip(context).apply {
-                        text = tech.name
-                        isCheckable = true
-                        tag = tech.id
-                        // 1. Set Chip background color when selected
-                        setChipBackgroundColorResource(R.color.chip_background_selector)
-                        // 2. Set the text color selector
-                        setTextColor(androidx.appcompat.content.res.AppCompatResources.getColorStateList(context, R.color.chip_text_color))
+                viewModel.state.collect { technologies ->
+                    techChipGroup.removeAllViews()
+                    technologies.forEach { tech ->
+                        val chip = Chip(context).apply {
+                            text = tech.name
+                            isCheckable = true
+                            tag = tech.id
+                            // 1. Set Chip background color when selected
+                            setChipBackgroundColorResource(R.color.chip_background_selector)
+                            // 2. Set the text color selector
+                            setTextColor(
+                                AppCompatResources.getColorStateList(
+                                    context,
+                                    R.color.chip_text_color
+                                )
+                            )
+                        }
+                        techChipGroup.addView(chip)
                     }
-                    techChipGroup.addView(chip)
                 }
             } catch (e: Exception) {
                 // Log the error so you can see it in Logcat!
@@ -53,14 +66,36 @@ class AddProjectFragment : Fragment(R.layout.fragment_add_project) { // Standard
             }
         }
 
+
+         // 2. Observe sae status
+        lifecycleScope.launch {
+            viewModel.saveStatus.collect { state ->
+                when (state) {
+                    is UiState.Loading -> buttonSaveProject.isEnabled = false
+                    is UiState.Success -> findNavController().navigate(R.id.action_addProjectFragment_to_successFragment)
+                    is UiState.Error -> {
+                        buttonSaveProject.isEnabled = true
+                        Toast.makeText(context, state.message, Toast.LENGTH_LONG).show()
+                    }
+                    else -> {}
+                }
+            }
+        }
+
+
         buttonSaveProject.setOnClickListener {
-            // 2. CAPTURE INPUT HERE (When button is clicked)
+            // 3. CAPTURE INPUT HERE FROM VIEWS (When button is clicked)
             val title = etTitle.text.toString().trim()
             val repoUrl = etRepoUrl.text.toString().trim()
             val description = etDescription.text.toString().trim()
 
             if (title.isEmpty()) {
                 etTitle.error = "Title required"
+                return@setOnClickListener
+            }
+
+            if (repoUrl.isEmpty()) {
+                etTitle.error = "Project URL required"
                 return@setOnClickListener
             }
 
@@ -78,29 +113,15 @@ class AddProjectFragment : Fragment(R.layout.fragment_add_project) { // Standard
             if (user != null) {
                 lifecycleScope.launch {
                     try {
-                        val draftProject = Project(
+                        viewModel.saveProject(
                             userId = user.id,
                             title = title,
-                            repoUrl = repoUrl,
                             description = description,
+                            repoUrl = repoUrl,
+                            selectedTechIds = selectedTechIds
                         )
-
-                        val newProject = supabase.from("projects").insert(draftProject) {
-                            select()
-                        }.decodeSingle<Project>()
-
-                        // Insert join table rows
-                        if (selectedTechIds.isNotEmpty()) {
-                            val joinRows = selectedTechIds.map { techId ->
-                                mapOf("project_id" to newProject.id, "tech_id" to techId)
-                            }
-                            supabase.from("project_tech").insert(joinRows)
-                        }
-
-                        // Successfully saved! Maybe navigate back?
-                         findNavController().navigate(R.id.action_addProjectFragment_to_successFragment)
-
                     } catch (e: Exception) {
+                        Toast.makeText(context, "You must be logged in", Toast.LENGTH_SHORT).show()
                         Log.e("SupabaseError", "Error saving project", e)
                     }
                 }

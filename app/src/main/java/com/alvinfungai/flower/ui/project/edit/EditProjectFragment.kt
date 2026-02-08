@@ -1,4 +1,4 @@
-package com.alvinfungai.flower
+package com.alvinfungai.flower.ui.project.edit
 
 import android.os.Bundle
 import android.util.Log
@@ -10,11 +10,15 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.alvinfungai.flower.R
+import com.alvinfungai.flower.data.model.Project
+import com.alvinfungai.flower.data.model.ProjectTechJoin
+import com.alvinfungai.flower.data.model.Technology
+import com.alvinfungai.flower.data.remote.SupabaseClientProvider
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.launch
-
 
 class EditProjectFragment : Fragment(R.layout.fragment_add_project) {
     private val supabase = SupabaseClientProvider.client
