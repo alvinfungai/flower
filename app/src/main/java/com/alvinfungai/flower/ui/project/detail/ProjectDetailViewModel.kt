@@ -1,4 +1,4 @@
-package com.alvinfungai.flower.ui.profile
+package com.alvinfungai.flower.ui.project.detail
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.alvinfungai.flower.data.model.Project
 import com.alvinfungai.flower.data.model.ProjectWithTech
 import com.alvinfungai.flower.data.remote.SupabaseClientProvider
+import com.alvinfungai.flower.data.repository.ProjectRepository
+import com.alvinfungai.flower.data.repository.SupabaseProjectRepository
 import com.alvinfungai.flower.ui.common.UiState
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
@@ -15,23 +17,22 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class ProjectDetailViewModel : ViewModel() {
-    private val supabase = SupabaseClientProvider.client
+class ProjectDetailViewModel(
+    private val repository: ProjectRepository = SupabaseProjectRepository(SupabaseClientProvider.client)
+) : ViewModel() {
 
     private val _state = MutableStateFlow<UiState<ProjectWithTech>>(UiState.Loading)
     val state: StateFlow<UiState<ProjectWithTech>> = _state
 
     fun fetchProjectDetails(projectId: String) {
         viewModelScope.launch {
+            _state.value = UiState.Loading
             try {
                 // Fetch project with technologies
-                val project = supabase.from("projects")
-                    .select(columns = Columns.Companion.raw("*, technologies(*)")) {
-                        filter { Project::id eq projectId }
-                    }.decodeSingle<ProjectWithTech>()
-                _state.value = UiState.Success(project)
+                val data = repository.getProjectById(projectId)
+                _state.value = UiState.Success(data)
             } catch (e: Exception) {
-                _state.value = UiState.Error(e.message ?: "Unknown Error")
+                _state.value = UiState.Error(e.message ?: "Failed to fetch details")
             }
         }
     }
@@ -41,9 +42,10 @@ class ProjectDetailViewModel : ViewModel() {
             try {
                 _state.value = UiState.Loading
 
-                supabase.from("projects").delete {
-                    filter { eq("id", projectId) }
-                }
+                repository.deleteProject(projectId)
+
+                // Update the state
+                _state.value = UiState.Deleted
 
                 // Switch back to Main thread to ensure UI navigation works
                 withContext(Dispatchers.Main) {
@@ -51,7 +53,7 @@ class ProjectDetailViewModel : ViewModel() {
                 }
             } catch (e: Exception) {
                 _state.value = UiState.Error(e.message ?: "Delete failed")
-                Log.e("DeleteError", "Error deleting: ${e.message}")
+//                Log.e("DeleteError", "Error deleting: ${e.message}")
             }
         }
     }

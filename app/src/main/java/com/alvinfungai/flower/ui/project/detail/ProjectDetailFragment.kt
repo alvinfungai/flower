@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.alvinfungai.flower.ui.profile.ProjectDetailViewModel
 import com.alvinfungai.flower.R
 import com.alvinfungai.flower.data.remote.SupabaseClientProvider
 import com.alvinfungai.flower.ui.common.UiState
@@ -101,6 +100,13 @@ class ProjectDetailFragment : Fragment(R.layout.fragment_project_detail) {
                     is UiState.Loading -> {
                         btnDelete.isEnabled = false  // Prevent double click
                         pbLoading.visibility = View.VISIBLE // show progress bar
+                    }
+
+                    is UiState.Deleted -> {
+                        // This state only happens after the repo call succeeds
+                        pbLoading.visibility = View.GONE
+                        // We don't need to do much here if
+                        // already navigating away via the callback
                     }
                 }
             }

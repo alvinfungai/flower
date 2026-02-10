@@ -29,11 +29,12 @@ class AddProjectViewModelTest {
     @Test
     fun `saveProject successfully updates state to Success`() = runTest {
 
+        fakeRepo.shouldReturnError = false
         // Arrange
         val title = "Example App"
 
         // Act
-        viewModel.saveProject("user1", title, "url", "desc", emptyList())
+        viewModel.saveProject(userId = "user1", title = title, "url", "desc", emptyList())
 
         // Assert
         assert(viewModel.saveStatus.value  is UiState.Success)
