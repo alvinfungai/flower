@@ -2,14 +2,20 @@ package com.alvinfungai.flower.ui.project.edit
 
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.alvinfungai.flower.R
@@ -32,8 +38,6 @@ class EditProjectFragment : Fragment(R.layout.fragment_add_project) {
 
         val projectId = arguments?.getString("project_id") ?: return
 
-        viewModel.loadInitialData(projectId)
-
         Log.d("EditProjectFragment", "onViewCreated: $projectId")
 
         val tvTitle = view.findViewById<TextView>(R.id.tv_title)
@@ -42,6 +46,42 @@ class EditProjectFragment : Fragment(R.layout.fragment_add_project) {
         val etDescription = view.findViewById<EditText>(R.id.et_description)
         val techChipGroup = view.findViewById<ChipGroup>(R.id.chip_group_tech)
         val btnSave = view.findViewById<Button>(R.id.btn_save_project)
+
+        val menuHost: MenuHost = requireActivity()
+
+        menuHost.addMenuProvider(object: MenuProvider {
+            override fun onCreateMenu(
+                menu: Menu,
+                menuInflater: MenuInflater
+            ) {
+                menuInflater.inflate(R.menu.edit_menu, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.action_save -> {
+                        val techIds = (0 until techChipGroup.childCount)
+                            .map { techChipGroup.getChildAt(it) as Chip }
+                            .filter { it.isChecked }
+                            .map { it.tag.toString() }
+
+                        viewModel.updateProject(
+                            projectId,
+                            etTitle.text.toString(),
+                            etDescription.text.toString(),
+                            etRepoUrl.text.toString(),
+                            techIds
+                        )
+                        true
+                    }
+                    else -> false
+                }
+            }
+
+        },
+            viewLifecycleOwner, Lifecycle.State.RESUMED)
+
+        viewModel.loadInitialData(projectId)
 
         // Dynamically change views since we are reusing add_project layout
         tvTitle.text = "Edit Project"
