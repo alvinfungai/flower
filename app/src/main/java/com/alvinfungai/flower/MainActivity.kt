@@ -15,9 +15,13 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI.setupWithNavController
+import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.alvinfungai.flower.data.remote.SupabaseClientProvider
 import com.alvinfungai.flower.ui.auth.MainViewModel
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import io.github.jan.supabase.auth.handleDeeplinks
 import kotlinx.coroutines.launch
@@ -45,6 +49,14 @@ class MainActivity : AppCompatActivity() {
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
+        val toolbar = findViewById<MaterialToolbar>(R.id.top_app_bar)
+
+        // Config top-level destination for no "back button"
+        val appBarConfig = AppBarConfiguration(setOf(R.id.homeFragment))
+
+        // setup with navController
+        setupWithNavController(toolbar, navController, appBarConfig)
+
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)
 
         val navGraph = navController.navInflater.inflate(R.navigation.main_nav_graph)
