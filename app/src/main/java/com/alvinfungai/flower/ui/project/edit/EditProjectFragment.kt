@@ -134,6 +134,7 @@ class EditProjectFragment : Fragment(R.layout.fragment_add_project) {
                     is UiState.Error -> {
                         btnSave.isEnabled = true
                         Toast.makeText(context, state.message, Toast.LENGTH_LONG).show()
+                        Log.d("EditProjectFragment", "onViewCreated: ${state.message}")
                     }
                     else -> {}
                 }

@@ -51,7 +51,7 @@ class SupabaseProjectRepository(private val client: SupabaseClient) : ProjectRep
 
         // sync technologies: Delete existing joins for this project
         client.from("project_tech").delete {
-            filter { eq("id", projectId) }
+            filter { eq("project_id", projectId) }
         }
 
         // insert new selections
