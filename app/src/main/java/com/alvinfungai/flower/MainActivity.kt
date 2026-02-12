@@ -80,6 +80,7 @@ class MainActivity : AppCompatActivity() {
                 viewModel.state.collect { state ->
                     when (state) {
                         is MainViewModel.AuthState.Authenticated -> {
+                            bottomNav.visibility = View.VISIBLE
                             if (navController.currentDestination?.id == R.id.loginFragment) {
                                 navGraph.setStartDestination(R.id.homeFragment)
                                 val navOptions = NavOptions.Builder()
@@ -90,6 +91,7 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
                         is MainViewModel.AuthState.Unauthenticated -> {
+                            bottomNav.visibility = View.GONE
                             navGraph.setStartDestination(R.id.loginFragment)
                             if (navController.currentDestination?.id != R.id.loginFragment) {
                                 // clear backstack to remove "back button" into the app

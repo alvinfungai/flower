@@ -4,28 +4,25 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alvinfungai.flower.data.remote.SupabaseClientProvider
 import io.github.jan.supabase.auth.auth
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
+import io.github.jan.supabase.auth.status.SessionStatus
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 
 class MainViewModel : ViewModel() {
-    private val _state = MutableStateFlow<AuthState>(AuthState.Loading)
-    val state = _state.asStateFlow()
-
-    init {
-        checkSession()
-    }
-
-    private fun checkSession() {
-        viewModelScope.launch {
-            // Check if a session exists in local persistence
-            val supabase = SupabaseClientProvider.client
-            val session = supabase.auth.currentSessionOrNull()
-            delay(500) // small delay to ensure session object setup correctly
-            _state.value = if (session != null) AuthState.Authenticated else AuthState.Unauthenticated
+    val state: StateFlow<AuthState> = SupabaseClientProvider.client.auth.sessionStatus.map { status ->
+        when (status) {
+            is SessionStatus.Authenticated -> AuthState.Authenticated
+            is SessionStatus.NotAuthenticated -> AuthState.Unauthenticated
+            is SessionStatus.Initializing -> AuthState.Loading
+            is SessionStatus.RefreshFailure -> AuthState.Unauthenticated
         }
-    }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = AuthState.Loading
+    )
 
     sealed class AuthState {
         object Loading : AuthState()
