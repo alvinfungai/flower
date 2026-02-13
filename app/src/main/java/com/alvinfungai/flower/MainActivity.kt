@@ -17,7 +17,6 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI.setupWithNavController
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.alvinfungai.flower.data.remote.SupabaseClientProvider
 import com.alvinfungai.flower.ui.auth.MainViewModel
@@ -52,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         val toolbar = findViewById<MaterialToolbar>(R.id.top_app_bar)
 
         // Config top-level destination for no "back button"
-        val appBarConfig = AppBarConfiguration(setOf(R.id.homeFragment))
+        val appBarConfig = AppBarConfiguration(setOf(R.id.loginFragment, R.id.homeFragment))
 
         // setup with navController
         setupWithNavController(toolbar, navController, appBarConfig)
@@ -64,7 +63,7 @@ class MainActivity : AppCompatActivity() {
         // Toggle BottomNav Visibility
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.loginFragment, R.id.homeFragment, R.id.profileFragment -> {
+                R.id.homeFragment, R.id.profileFragment -> {
                     bottomNav.visibility = View.VISIBLE
                 }
                 else -> {
@@ -91,7 +90,6 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
                         is MainViewModel.AuthState.Unauthenticated -> {
-                            bottomNav.visibility = View.GONE
                             navGraph.setStartDestination(R.id.loginFragment)
                             if (navController.currentDestination?.id != R.id.loginFragment) {
                                 // clear backstack to remove "back button" into the app
@@ -99,6 +97,7 @@ class MainActivity : AppCompatActivity() {
                                     .setPopUpTo(navController.graph.startDestinationId, true)
                                     .build())
                             }
+                            bottomNav.visibility = View.GONE
                         }
                         else -> {
                             // Handle Loading or Error states

@@ -1,5 +1,6 @@
 package com.alvinfungai.flower.data.repository
 
+import android.util.Log
 import com.alvinfungai.flower.data.model.Project
 import com.alvinfungai.flower.data.model.ProjectWithTech
 import com.alvinfungai.flower.data.model.Technology
@@ -33,6 +34,17 @@ class SupabaseProjectRepository(private val client: SupabaseClient) : ProjectRep
             .select(columns = Columns.raw("*, technologies(*)")) {
                 filter { eq("id", projectId) }
             }.decodeSingle<ProjectWithTech>()
+    }
+
+    override suspend fun getProjectsByUserId(userId: String): List<Project> {
+        return try {
+            client.from("projects").select {
+                filter { eq("user_id", userId) }
+            }.decodeList<Project>()
+        } catch (e: Exception) {
+            Log.e("PROFILE", "Error fetching projects: ${e.message}")
+            emptyList()
+        }
     }
 
     override suspend fun updateProjectWithTech(
