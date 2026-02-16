@@ -61,6 +61,11 @@ class FakeProjectRepository : ProjectRepository {
         )
     }
 
+    override suspend fun getProjectsByUserId(userId: String): List<Project> {
+        if (shouldReturnError) throw Exception("Test error")
+        return projects.filter { it.userId == userId }
+    }
+
     override suspend fun updateProjectWithTech(
         projectId: String,
         title: String,
