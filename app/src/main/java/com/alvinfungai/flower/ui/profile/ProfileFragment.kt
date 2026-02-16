@@ -51,6 +51,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         editProfileButton.setOnClickListener {
             lifecycleScope.launch {
                 // navigate to edit profile fragment
+                findNavController().navigate(R.id.action_profileFragment_to_editProfileFragment)
             }
         }
 

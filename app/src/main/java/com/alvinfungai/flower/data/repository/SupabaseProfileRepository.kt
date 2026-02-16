@@ -21,6 +21,7 @@ class SupabaseProfileRepository(private val supabase: SupabaseClient) : ProfileR
 
     override suspend fun updateProfile(profile: Profile): Boolean {
         return try {
+            Log.d("UPDATE", "updateProfile: UPDATED: $profile")
             supabase.from("profiles").update(profile) {
                 filter { eq("id", profile.id) }
             }

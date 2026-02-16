@@ -8,7 +8,8 @@ sealed class ProfileUiState {
     data class Success(
         val profile: Profile,
         val projects: List<Project>,
-        val isSaving: Boolean = false
+        val isSaving: Boolean = false,
+        val isDoneSaving: Boolean = false
         ) : ProfileUiState()
     data class Error(val message: String) : ProfileUiState()
 }

@@ -40,7 +40,7 @@ class ProfileViewModel(
     fun updateUserProfile(newName: String, newBio: String) {
         val currentState = _uiState.value
         if (currentState is ProfileUiState.Success) {
-            val currentProfile = currentState.profile
+            // val currentProfile = currentState.profile
 
             viewModelScope.launch {
                 // Emit "Saving" state
@@ -57,12 +57,20 @@ class ProfileViewModel(
                     // update data and hide saving message
                     _uiState.value = currentState.copy(
                         profile = updatedProfile,
-                        isSaving = false
+                        isSaving = false,
+                        isDoneSaving = true
                     )
                 } else {
                     _uiState.value = ProfileUiState.Error("Failed to save changes")
                 }
             }
+        }
+    }
+
+    fun resetSaveFlag() {
+        val state = _uiState.value
+        if (state is ProfileUiState.Success) {
+            _uiState.value = state.copy(isDoneSaving = false)
         }
     }
 
