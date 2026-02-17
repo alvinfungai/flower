@@ -67,6 +67,10 @@ android {
     buildFeatures {
         buildConfig = true
     }
+
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -99,12 +103,17 @@ dependencies {
     implementation(libs.navigation.ui.ktx)
 
     // For mocking Supabase/Repository
-    testImplementation("io.mockk:mockk:1.13.5")
+    testImplementation(libs.mockk)
 
     // For testing StateFlow
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
+    testImplementation(libs.kotlinx.coroutines.test)
 
     // to test Flow streams
-    testImplementation("app.cash.turbine:turbine:1.0.0")
+    testImplementation(libs.turbine)
+
+    // Timber logger
+    implementation(libs.timber)
+
+    testImplementation(libs.slf4j.simple)
 
 }

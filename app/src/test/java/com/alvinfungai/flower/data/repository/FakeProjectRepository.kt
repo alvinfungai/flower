@@ -61,6 +61,8 @@ class FakeProjectRepository : ProjectRepository {
         )
     }
 
+
+
     override suspend fun getProjectsByUserId(userId: String): List<Project> {
         if (shouldReturnError) throw Exception("Test error")
         return projects.filter { it.userId == userId }
@@ -105,5 +107,10 @@ class FakeProjectRepository : ProjectRepository {
     fun seedData(initialProjects: List<Project>, initialTech: List<Technology>) {
         projects.addAll(initialProjects)
         technologies.addAll(initialTech)
+    }
+
+    // Helper for project tech joins
+    fun getTechForProject(projectId: String): List<String> {
+        return projectTechJoins[projectId] ?: emptyList()
     }
 }

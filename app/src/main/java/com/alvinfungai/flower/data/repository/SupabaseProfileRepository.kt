@@ -5,6 +5,7 @@ import com.alvinfungai.flower.data.model.Profile
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.from
+import timber.log.Timber
 
 
 class SupabaseProfileRepository(private val supabase: SupabaseClient) : ProfileRepository {
@@ -14,20 +15,19 @@ class SupabaseProfileRepository(private val supabase: SupabaseClient) : ProfileR
                 filter { eq("id", userId) }
             }.decodeSingleOrNull<Profile>()
         } catch (e: Exception) {
-            Log.e("AUTH_DEBUG", "Error fetching profile: ${e.message}")
+            Timber.e("Error fetching profile: ${e.message}")
             null
         }
     }
 
     override suspend fun updateProfile(profile: Profile): Boolean {
         return try {
-            Log.d("UPDATE", "updateProfile: UPDATED: $profile")
             supabase.from("profiles").update(profile) {
                 filter { eq("id", profile.id) }
             }
             true
         } catch (e: Exception) {
-            Log.e("AUTH_DEBUG", "Update profile failed: ${e.message}")
+            Timber.e("Update profile failed: ${e.message}")
             false
         }
     }
