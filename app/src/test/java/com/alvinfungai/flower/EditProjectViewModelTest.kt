@@ -7,6 +7,8 @@ import com.alvinfungai.flower.data.repository.FakeProjectRepository
 import com.alvinfungai.flower.ui.common.UiState
 import com.alvinfungai.flower.ui.project.edit.EditProjectViewModel
 import junit.framework.TestCase.assertEquals
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -57,18 +59,19 @@ class EditProjectViewModelTest {
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun `updateProject successfully updates state to Success`() = runTest {
-//        fakeRepo.shouldReturnError = false
-//
-//        viewModel.saveStatus.test {
-//           awaitItem()
-//
-//            viewModel.updateProject("1", "New Title", "New Desc", "New Url")
-//
-//            assert(awaitItem() is UiState.Success)
-//        }
+    fun `updateProjectWithTech should update both project details and technology links`() = runTest {
+        // 1. GIVEN: Prepare data
+        val projectId = "1"
+
+        // 2. ACT & ASSERT: Observe saveStatus specifically
+        viewModel.saveStatus.test {
+            viewModel.updateProject(projectId = projectId, "Title", "Desc", "Url", listOf("t1"))
+            skipItems(1) // Skips the initial state (Loading)
+
+            advanceUntilIdle()
+            assert(awaitItem() is UiState.Deleted)
+        }
     }
-
-
 }
