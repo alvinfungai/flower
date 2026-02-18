@@ -19,6 +19,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.alvinfungai.flower.data.remote.SupabaseClientProvider
+import com.alvinfungai.flower.ui.auth.AuthState
 import com.alvinfungai.flower.ui.auth.MainViewModel
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -36,7 +37,7 @@ class MainActivity : AppCompatActivity() {
 
         // 2. Keep the splash screen visible until session check is complete
         splashScreen.setKeepOnScreenCondition {
-            viewModel.state.value is MainViewModel.AuthState.Loading
+            viewModel.state.value is AuthState.Loading
         }
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
@@ -78,7 +79,7 @@ class MainActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect { state ->
                     when (state) {
-                        is MainViewModel.AuthState.Authenticated -> {
+                        is AuthState.Authenticated -> {
                             bottomNav.visibility = View.VISIBLE
                             if (navController.currentDestination?.id == R.id.loginFragment) {
                                 navGraph.setStartDestination(R.id.homeFragment)
@@ -89,7 +90,7 @@ class MainActivity : AppCompatActivity() {
                                 navController.navigate(R.id.action_loginFragment_to_homeFragment, null, navOptions)
                             }
                         }
-                        is MainViewModel.AuthState.Unauthenticated -> {
+                        is AuthState.Unauthenticated -> {
                             navGraph.setStartDestination(R.id.loginFragment)
                             if (navController.currentDestination?.id != R.id.loginFragment) {
                                 // clear backstack to remove "back button" into the app
