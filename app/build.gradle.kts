@@ -43,6 +43,9 @@ android {
         // Get SUPABASE_ANON_KEY field
         buildConfigField("String", "SUPABASE_ANON_KEY", "\"${properties.getProperty("SUPABASE_ANON_KEY")}\"")
 
+        // Google Client ID
+        buildConfigField("String", "GOOGLE_CLIENT_ID", "\"${properties.getProperty("GOOGLE_CLIENT_ID")}\"")
+
     }
 
     buildTypes {
@@ -115,5 +118,10 @@ dependencies {
     implementation(libs.timber)
 
     testImplementation(libs.slf4j.simple)
+
+    // Social login: Google
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
 
 }
