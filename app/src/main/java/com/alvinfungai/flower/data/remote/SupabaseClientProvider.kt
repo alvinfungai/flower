@@ -7,6 +7,7 @@ import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.auth.FlowType
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
+import io.github.jan.supabase.storage.Storage
 
 object SupabaseClientProvider {
     private var _supabase: SupabaseClient? = null
@@ -24,6 +25,7 @@ object SupabaseClientProvider {
                 host = "auth"
             }
             install(Postgrest.Companion)
+            install(Storage.Companion)
         }
     }
 }

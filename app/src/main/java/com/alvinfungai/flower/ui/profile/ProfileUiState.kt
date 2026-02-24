@@ -4,6 +4,7 @@ import com.alvinfungai.flower.data.model.Profile
 import com.alvinfungai.flower.data.model.Project
 
 sealed class ProfileUiState {
+    object Idle : ProfileUiState()
     data object Loading : ProfileUiState()
     data class Success(
         val profile: Profile,
