@@ -23,7 +23,7 @@ class ProfileRepositoryTest {
     @Before
     fun setup() {
         fakeRepo = FakeProfileRepository()
-        viewModel = ProfileViewModel(fakeRepo, mockk(relaxed = true))
+        viewModel = ProfileViewModel(fakeRepo, mockk(relaxed = true), mockk(relaxed = true))
     }
     @Test
     fun `saveProfile successfully updates the saved one`() = runTest {
@@ -54,7 +54,7 @@ class ProfileRepositoryTest {
     @Test
     fun `viewModel signOut should trigger repository signOut`() = runTest {
         val fakeRepo = FakeProfileRepository()
-        val viewModel = ProfileViewModel(fakeRepo, mockk(relaxed = true))
+        val viewModel = ProfileViewModel(fakeRepo, mockk(relaxed = true), mockk(relaxed = true))
 
         viewModel.signOut()
 

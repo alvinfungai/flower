@@ -1,5 +1,5 @@
 [versions]
-agp = "8.13.2"
+agp = "9.0.1"
 bom = "3.3.0"
 credentialsPlayServicesAuth = "1.5.0"
 googleid = "1.2.0"
@@ -58,6 +58,7 @@ navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx",
 androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigationUiKtx" }
 slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4jSimple" }
+storage-kt = { module = "io.github.jan-tennert.supabase:storage-kt", version.ref = "bom" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 

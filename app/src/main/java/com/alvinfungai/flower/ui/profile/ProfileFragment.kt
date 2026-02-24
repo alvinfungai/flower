@@ -18,6 +18,9 @@ import androidx.recyclerview.widget.RecyclerView
 import coil3.load
 import com.alvinfungai.flower.R
 import com.alvinfungai.flower.data.remote.SupabaseClientProvider
+import com.alvinfungai.flower.data.repository.SupabaseProfileRepository
+import com.alvinfungai.flower.data.repository.SupabaseProjectRepository
+import com.alvinfungai.flower.ui.common.ImageCompressor
 import com.alvinfungai.flower.ui.common.ProjectsAdapter
 import de.hdodenhof.circleimageview.CircleImageView
 import io.github.jan.supabase.auth.auth
@@ -25,7 +28,15 @@ import kotlinx.coroutines.launch
 
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
     val supabase = SupabaseClientProvider.client
-    private val viewModel: ProfileViewModel by viewModels()
+    private val viewModel: ProfileViewModel by viewModels {
+        // 1. Create the dependencies manually
+        val profileRepository = SupabaseProfileRepository(SupabaseClientProvider.client)
+        val projectRepository = SupabaseProjectRepository(SupabaseClientProvider.client)
+        val imageCompressor = ImageCompressor(requireContext().applicationContext)
+
+        // 2. Pass them into factory
+        ProfileViewModelFactory(profileRepository, projectRepository, imageCompressor)
+    }
     private lateinit var profileImage: CircleImageView
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -108,6 +119,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                                 progressBar.visibility = View.GONE
                                 Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
                             }
+                            else -> {}
                         }
                     }
                 }

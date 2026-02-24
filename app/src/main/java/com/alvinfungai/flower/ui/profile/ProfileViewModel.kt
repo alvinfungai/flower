@@ -1,39 +1,41 @@
 package com.alvinfungai.flower.ui.profile
 
+import android.content.ContentResolver
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alvinfungai.flower.data.remote.SupabaseClientProvider
 import com.alvinfungai.flower.data.repository.ProfileRepository
 import com.alvinfungai.flower.data.repository.ProjectRepository
-import com.alvinfungai.flower.data.repository.SupabaseProfileRepository
-import com.alvinfungai.flower.data.repository.SupabaseProjectRepository
+import com.alvinfungai.flower.ui.common.ImageCompressor
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 
 class ProfileViewModel(
-    private val profileRepository: ProfileRepository = SupabaseProfileRepository(
-        SupabaseClientProvider.client
-    ),
-    private val projectRepository: ProjectRepository = SupabaseProjectRepository(
-        SupabaseClientProvider.client
-    )
-    ) : ViewModel() {
-    private val _uiState = MutableStateFlow<ProfileUiState>(ProfileUiState.Loading)
+    private val profileRepository: ProfileRepository,
+    private val projectRepository: ProjectRepository,
+    private val imageCompressor: ImageCompressor
+) : ViewModel() {
+    private val _uiState = MutableStateFlow<ProfileUiState>(ProfileUiState.Idle)
     val uiState = _uiState.asStateFlow()
 
+    // Refactor to use helper so that UI client code remains the same
     fun loadProfileData(userId: String) {
         viewModelScope.launch {
-            _uiState.value = ProfileUiState.Loading
+            loadProfileHelper(userId)
+        }
+    }
 
-            val profile = profileRepository.getUserProfile(userId)
-            val projects = projectRepository.getProjectsByUserId(userId)
-            if(profile != null) {
-                _uiState.value = ProfileUiState.Success(profile, projects)
-            } else {
-                _uiState.value = ProfileUiState.Error("Profile not found")
-            }
+    private suspend fun loadProfileHelper(userId: String) {
+        _uiState.value = ProfileUiState.Loading
+        val profile = profileRepository.getUserProfile(userId)
+        val projects = projectRepository.getProjectsByUserId(userId)
+
+        if (profile != null) {
+            _uiState.value = ProfileUiState.Success(profile, projects)
+        } else {
+            _uiState.value = ProfileUiState.Error("Profile not found")
         }
     }
 
@@ -62,6 +64,40 @@ class ProfileViewModel(
                     )
                 } else {
                     _uiState.value = ProfileUiState.Error("Failed to save changes")
+                }
+            }
+        }
+    }
+
+    fun uploadProfileImage(userId: String, contentResolver: ContentResolver, uri: Uri) {
+        val currentState = _uiState.value
+        if (currentState is ProfileUiState.Success) {
+            viewModelScope.launch {
+                _uiState.value = currentState.copy(isSaving = true)
+                try {
+                    // Convert Uri to Bytes
+                    val bytes = contentResolver.openInputStream(uri)?.use { it.readBytes() }
+                        ?: throw Exception("Failed to process the image")
+
+                    // upload to server
+                    val isSuccessful = profileRepository.updateProfilePicture(userId, bytes)
+
+                    if (isSuccessful) {
+                        // wait for refresh to finish before moving on
+                        loadProfileHelper(userId)
+                        // uiState is guaranteed to be the Success state from internalLoadProfile
+                        val newState = _uiState.value
+                        if (newState is ProfileUiState.Success) {
+                            _uiState.value = newState.copy(
+                                isSaving = false,
+                                isDoneSaving = true
+                            )
+                        }
+                    } else {
+                        _uiState.value = ProfileUiState.Error("Failed to upload image")
+                    }
+                } catch (e: Exception) {
+                    _uiState.value = ProfileUiState.Error(e.message ?: "An error occurred")
                 }
             }
         }

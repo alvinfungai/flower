@@ -93,6 +93,7 @@ dependencies {
     implementation(libs.ktor.client.okhttp)
     implementation(platform(libs.bom))
     implementation(libs.postgrest.kt)
+    implementation(libs.storage.kt)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.serialization.json)
     implementation(libs.androidx.recyclerview)
