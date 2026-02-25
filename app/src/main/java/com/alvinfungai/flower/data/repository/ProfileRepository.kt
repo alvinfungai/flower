@@ -1,6 +1,7 @@
 package com.alvinfungai.flower.data.repository
 
 import com.alvinfungai.flower.data.model.Profile
+import com.alvinfungai.flower.data.model.Project
 
 
 interface ProfileRepository {

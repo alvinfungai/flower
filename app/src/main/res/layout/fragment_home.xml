@@ -9,7 +9,7 @@
     tools:context=".ui.project.home.HomeFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_projects"
+        android:id="@+id/rv_home_feed"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
@@ -22,5 +22,12 @@
         android:fitsSystemWindows="true"
         app:srcCompat="@drawable/ic_add"
         app:elevation="6dp" />
+
+    <ProgressBar
+        android:id="@+id/pb_home_loading"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

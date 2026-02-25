@@ -9,5 +9,7 @@ data class Project(
     @SerialName("user_id") val userId: String,
     @SerialName("repo_url") val repoUrl: String,
     val title: String,
-    val description: String?
+    val description: String?,
+    @SerialName("vote_score") val voteScore: Int,
+    @SerialName("user_vote") val userVote: Boolean? = null
 )

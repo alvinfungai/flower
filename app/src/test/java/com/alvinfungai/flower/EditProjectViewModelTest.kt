@@ -29,10 +29,11 @@ class EditProjectViewModelTest {
             Project(
                 id = "1",
                 userId = "user-id",
+                repoUrl = "Url",
                 title = "Title",
                 description = "Desc",
-                repoUrl = "Url"
-        ))
+                voteScore = 0
+            ))
         viewModel = EditProjectViewModel(fakeRepo)
     }
 
@@ -41,7 +42,7 @@ class EditProjectViewModelTest {
         // Arrange: Seed one project and 2 tech objects, but only link 1 tech
         val tech1 = Technology("t1", "Kotlin")
         val tech2 = Technology("t2", "Compose")
-        val project = Project("p1", "user1", "url", "test", "desc")
+        val project = Project("p1", "user1", "url", "test", "desc", voteScore = 0)
 
         fakeRepo.seedData(listOf(project), listOf(tech1, tech2))
         fakeRepo.createProject(project, listOf("t1")) // only link Kotlin

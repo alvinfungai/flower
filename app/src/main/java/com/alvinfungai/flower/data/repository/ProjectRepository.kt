@@ -12,4 +12,6 @@ interface ProjectRepository {
     suspend fun getProjectsByUserId(userId: String): List<Project>
     suspend fun updateProjectWithTech(projectId: String, title: String, description: String, repoUrl: String, techIds: List<String>)
     suspend fun deleteProject(projectId: String)
+    suspend fun voteOnProject(projectId: String, isUpvote: Boolean): Result<Unit>
+    suspend fun fetchProjects(): List<Project>
 }

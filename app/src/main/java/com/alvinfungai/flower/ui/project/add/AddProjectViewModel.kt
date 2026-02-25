@@ -38,9 +38,10 @@ class AddProjectViewModel(
             try {
                 val project = Project(
                     userId = userId,
+                    repoUrl = repoUrl,
                     title = title,
                     description = description,
-                    repoUrl = repoUrl
+                    voteScore = 0
                 )
                 repository.createProject(project, selectedTechIds)
                 _saveStatus.value = UiState.Success(true)
