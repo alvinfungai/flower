@@ -2,10 +2,10 @@ package com.alvinfungai.flower.ui.profile
 
 import android.content.ContentResolver
 import android.net.Uri
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alvinfungai.flower.data.repository.ProfileRepository
 import com.alvinfungai.flower.data.repository.ProjectRepository
+import com.alvinfungai.flower.ui.common.BaseProjectViewModel
 import com.alvinfungai.flower.ui.common.ImageCompressor
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,9 +14,9 @@ import kotlinx.coroutines.launch
 
 class ProfileViewModel(
     private val profileRepository: ProfileRepository,
-    private val projectRepository: ProjectRepository,
+    projectRepository: ProjectRepository,
     private val imageCompressor: ImageCompressor
-) : ViewModel() {
+) : BaseProjectViewModel(projectRepository) {
     private val _uiState = MutableStateFlow<ProfileUiState>(ProfileUiState.Idle)
     val uiState = _uiState.asStateFlow()
 
@@ -100,6 +100,23 @@ class ProfileViewModel(
                     _uiState.value = ProfileUiState.Error(e.message ?: "An error occurred")
                 }
             }
+        }
+    }
+
+    fun onVoteProject(projectId: String, isUpvote: Boolean) {
+        val currentState = _uiState.value
+        if (currentState is ProfileUiState.Success) {
+            performVote(
+                projectId = projectId,
+                isUpvote = isUpvote,
+                currentProjects = currentState.projects,
+                onUpdate = { newList ->
+                    _uiState.value = currentState.copy(projects = newList)
+                },
+                onError = { error ->
+                    // emit effect for toast
+                }
+            )
         }
     }
 

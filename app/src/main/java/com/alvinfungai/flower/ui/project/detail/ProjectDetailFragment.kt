@@ -41,7 +41,7 @@ class ProjectDetailFragment : Fragment(R.layout.fragment_project_detail) {
         val chipGroup = view.findViewById<ChipGroup>(R.id.chip_group_detail_tech)
         val fabEdit = view.findViewById<FloatingActionButton>(R.id.fab_edit_project)
         val btnDelete = view.findViewById<Button>(R.id.btn_delete_project)
-        val pbLoading = view.findViewById<ProgressBar>(R.id.pb_loading)
+        val pbLoading = view.findViewById<ProgressBar>(R.id.pb_home_loading)
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.state.collect { state ->

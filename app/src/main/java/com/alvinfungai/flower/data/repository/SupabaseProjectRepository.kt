@@ -4,9 +4,12 @@ import android.util.Log
 import com.alvinfungai.flower.data.model.Project
 import com.alvinfungai.flower.data.model.ProjectWithTech
 import com.alvinfungai.flower.data.model.Technology
+import com.alvinfungai.flower.data.model.VoteRequest
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Columns
+import io.github.jan.supabase.postgrest.rpc
 
 class SupabaseProjectRepository(private val client: SupabaseClient) : ProjectRepository {
     override suspend fun createProject(
@@ -38,11 +41,10 @@ class SupabaseProjectRepository(private val client: SupabaseClient) : ProjectRep
 
     override suspend fun getProjectsByUserId(userId: String): List<Project> {
         return try {
-            client.from("projects").select {
+            client.from("projects_with_user_votes").select {
                 filter { eq("user_id", userId) }
             }.decodeList<Project>()
         } catch (e: Exception) {
-            Log.e("PROFILE", "Error fetching projects: ${e.message}")
             emptyList()
         }
     }
@@ -77,6 +79,27 @@ class SupabaseProjectRepository(private val client: SupabaseClient) : ProjectRep
         client.from("projects").delete {
             filter { eq("id", projectId) }
         }
+    }
+
+    override suspend fun voteOnProject(
+        projectId: String,
+        isUpvote: Boolean
+    ): Result<Unit> {
+        return try {
+            client.postgrest.rpc(
+                function = "handle_project_vote",
+                parameters = VoteRequest(projectId, isUpvote)
+            )
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun fetchProjects(): List<Project> {
+        return client.from("projects_with_user_votes") // Query the VIEW, not the table
+            .select()
+            .decodeList<Project>()
     }
 
 }

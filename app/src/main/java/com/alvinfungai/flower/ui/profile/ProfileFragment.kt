@@ -27,7 +27,6 @@ import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.launch
 
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
-    val supabase = SupabaseClientProvider.client
     private val viewModel: ProfileViewModel by viewModels {
         // 1. Create the dependencies manually
         val profileRepository = SupabaseProfileRepository(SupabaseClientProvider.client)
@@ -46,7 +45,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         val viewedUserId = arguments?.getString("user_id")
 
         // If user argument is null, default to logged in user ID
-        val targetUserId = viewedUserId ?: supabase.auth.currentUserOrNull()?.id
+        val targetUserId = viewedUserId ?: SupabaseClientProvider.client.auth.currentUserOrNull()?.id
 
         profileImage = view.findViewById<CircleImageView>(R.id.img_profile)
         val textViewUsername = view.findViewById<TextView>(R.id.tv_username)
@@ -55,8 +54,20 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             view.findViewById<RecyclerView>(R.id.recycler_view_profile_projects)
         val editProfileButton = view.findViewById<Button>(R.id.btn_edit_profile)
         val logoutButton = view.findViewById<Button>(R.id.btn_logout)
-        val progressBar = view.findViewById<ProgressBar>(R.id.pb_loading)
+        val progressBar = view.findViewById<ProgressBar>(R.id.pb_home_loading)
         val profileGroup = view.findViewById<Group>(R.id.profile_content_group)
+
+        val adapter = ProjectsAdapter(
+            onItemClick = { project ->
+                val bundle = Bundle().apply { putString("project_id", project.id) }
+                findNavController().navigate(R.id.action_profileFragment_to_projectDetailFragment, bundle)
+            },
+            onVoteClick = {projectId, isUpVote ->
+                viewModel.onVoteProject(projectId, isUpVote)
+            }
+        )
+        projectsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        projectsRecyclerView.adapter = adapter
 
         // Edit profile
         editProfileButton.setOnClickListener {
@@ -89,31 +100,19 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     viewModel.uiState.collect { state ->
                         when (state) {
                             is ProfileUiState.Loading -> {
-                                progressBar.visibility = View.GONE
+                                progressBar.visibility = View.VISIBLE
                                 profileGroup.visibility = View.GONE
                             }
                             is ProfileUiState.Success -> {
                                 progressBar.visibility = View.GONE
                                 profileGroup.visibility = View.VISIBLE
 
+                                // Update views
                                 profileImage.load(state.profile.avatarUrl)
                                 textViewUsername.text = state.profile.fullName
                                 textViewBio.text = state.profile.bio
-                                val projects = state.projects
-                                projectsRecyclerView.layoutManager =
-                                    LinearLayoutManager(requireContext())
-                                val adapter = ProjectsAdapter(projects) { project ->
-                                    // create a bundle and put the string inside
-                                    val bundle = Bundle().apply {
-                                        putString("project_id", project.id)
-                                    }
-                                    // nav
-                                    findNavController().navigate(
-                                        R.id.action_profileFragment_to_projectDetailFragment,
-                                        bundle
-                                    )
-                                }
-                                projectsRecyclerView.adapter = adapter
+
+                                adapter.submitList(state.projects)
                             }
                             is ProfileUiState.Error -> {
                                 progressBar.visibility = View.GONE

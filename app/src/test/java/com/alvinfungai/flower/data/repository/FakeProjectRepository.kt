@@ -95,6 +95,17 @@ class FakeProjectRepository : ProjectRepository {
         projectTechJoins.remove(projectId)
     }
 
+    override suspend fun voteOnProject(
+        projectId: String,
+        isUpvote: Boolean
+    ): Result<Unit> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun fetchProjects(): List<Project> {
+        TODO("Not yet implemented")
+    }
+
     // helper method to return project count
     fun getProjectCount() = projects.size
 
