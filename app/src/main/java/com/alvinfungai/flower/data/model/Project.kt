@@ -14,6 +14,6 @@ data class Project(
     val forks: Int = 0,
     @SerialName("open_issues") val openIssues: Int = 0,
     @SerialName("repo_updated_at") val repoUpdatedAt: String = "",
-    @SerialName("vote_score") val voteScore: Int,
+    @SerialName("vote_score") val voteScore: Int = 0,
     @SerialName("user_vote") val userVote: Boolean? = null
 )

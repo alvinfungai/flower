@@ -29,7 +29,7 @@ class ProjectDiffCallback : DiffUtil.ItemCallback<Project>() {
 class ProjectsAdapter(
     private val onItemClick: (Project) -> Unit,
     private val onVoteClick: (String, Boolean) -> Unit
-    ) : ListAdapter<Project, ProjectsAdapter.ProjectViewHolder>(ProjectDiffCallback()) {
+) : ListAdapter<Project, ProjectsAdapter.ProjectViewHolder>(ProjectDiffCallback()) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,

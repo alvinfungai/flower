@@ -7,13 +7,16 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.alvinfungai.flower.R
 import com.alvinfungai.flower.data.remote.SupabaseClientProvider
+import com.alvinfungai.flower.ui.common.TimeUtils
 import com.alvinfungai.flower.ui.common.UiState
+import com.alvinfungai.flower.ui.common.formatGithubCount
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -37,11 +40,21 @@ class ProjectDetailFragment : Fragment(R.layout.fragment_project_detail) {
 
         val tvTitle = view.findViewById<TextView>(R.id.tv_detail_title)
         val tvRepoUrl = view.findViewById<TextView>(R.id.tv_detail_repo)
+        val btnDetailUpvote = view.findViewById<AppCompatImageButton>(R.id.btn_detail_upvote)
+        val btnDetailDownvote = view.findViewById<AppCompatImageButton>(R.id.btn_detail_downvote)
+        val tvDetailVoteScore = view.findViewById<TextView>(R.id.tv_detail_vote_score)
+        val tvDetailStars = view.findViewById<TextView>(R.id.tv_detail_stars)
+        val tvDetailForks = view.findViewById<TextView>(R.id.tv_detail_forks)
+        val tvDetailUpdatedAt = view.findViewById<TextView>(R.id.tv_detail_updated_at)
         val tvDescription = view.findViewById<TextView>(R.id.tv_detail_desc)
         val chipGroup = view.findViewById<ChipGroup>(R.id.chip_group_detail_tech)
         val fabEdit = view.findViewById<FloatingActionButton>(R.id.fab_edit_project)
         val btnDelete = view.findViewById<Button>(R.id.btn_delete_project)
         val pbLoading = view.findViewById<ProgressBar>(R.id.pb_home_loading)
+
+        // setup click listeners
+        btnDetailUpvote.setOnClickListener { viewModel.onVote(true) }
+        btnDetailDownvote.setOnClickListener { viewModel.onVote(false) }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.state.collect { state ->
@@ -66,6 +79,10 @@ class ProjectDetailFragment : Fragment(R.layout.fragment_project_detail) {
                         // ui bindings
                         tvTitle.text = project.title
                         tvRepoUrl.text = project.repoUrl
+                        tvDetailStars.text = formatGithubCount(project.stars)
+                        tvDetailForks.text = formatGithubCount(project.forks)
+                        tvDetailVoteScore.text = formatGithubCount(project.voteScore)
+                        tvDetailUpdatedAt.text = TimeUtils.getRelativeTime(project.repoUpdatedAt)
                         tvDescription.text = project.description
 
                         Log.d("ProjectDetailFragment", "onViewCreated: $project")
