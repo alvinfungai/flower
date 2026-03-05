@@ -39,7 +39,7 @@ class ProfileViewModel(
         }
     }
 
-    fun updateUserProfile(newName: String, newBio: String) {
+    fun updateUserProfile(newName: String, newGithubUsername: String?, newBio: String) {
         val currentState = _uiState.value
         if (currentState is ProfileUiState.Success) {
             // val currentProfile = currentState.profile
@@ -50,7 +50,8 @@ class ProfileViewModel(
 
                 val updatedProfile = currentState.profile.copy(
                     fullName = newName,
-                    bio = newBio
+                    bio = newBio,
+                    githubUsername = newGithubUsername
                 )
 
                 val isSuccessful = profileRepository.updateProfile(updatedProfile)

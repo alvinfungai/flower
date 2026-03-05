@@ -49,6 +49,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
         profileImage = view.findViewById<CircleImageView>(R.id.img_profile)
         val textViewUsername = view.findViewById<TextView>(R.id.tv_username)
+        val textViewGithubUsername = view.findViewById<TextView>(R.id.tv_github_username)
+        val githubContainer = view.findViewById<View>(R.id.container_github)
         val textViewBio = view.findViewById<TextView>(R.id.tv_user_bio)
         val projectsRecyclerView =
             view.findViewById<RecyclerView>(R.id.recycler_view_profile_projects)
@@ -111,6 +113,13 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                                 profileImage.load(state.profile.avatarUrl)
                                 textViewUsername.text = state.profile.fullName
                                 textViewBio.text = state.profile.bio
+
+                                if (!state.profile.githubUsername.isNullOrEmpty()) {
+                                    githubContainer.visibility = View.VISIBLE
+                                    textViewGithubUsername.text = state.profile.githubUsername
+                                } else {
+                                    githubContainer.visibility = View.GONE
+                                }
 
                                 adapter.submitList(state.projects)
                             }

@@ -49,6 +49,16 @@ class ProjectsAdapter(
 
         holder.title.text = currentItem.title
         holder.description.text = currentItem.description
+
+        // stats
+        holder.starsCount.text = formatGithubCount(currentItem.stars)
+        holder.forkCount.text = formatGithubCount(currentItem.forks)
+
+        // relative time
+        val relativeTime = TimeUtils.getRelativeTime(currentItem.repoUpdatedAt)
+        holder.updatedAt.text = "Updated $relativeTime"
+
+        // votes
         holder.voteScore.text = currentItem.voteScore.toString()
 
         // Apply Activated state based on userVote
@@ -83,6 +93,9 @@ class ProjectsAdapter(
     class ProjectViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val title: TextView = itemView.findViewById(R.id.tv_title)
         val description: TextView = itemView.findViewById(R.id.tv_description)
+        val starsCount: TextView = itemView.findViewById(R.id.tv_stars)
+        val forkCount: TextView = itemView.findViewById(R.id.tv_forks)
+        val updatedAt: TextView = itemView.findViewById(R.id.tv_updated_at)
         val voteScore: TextView = itemView.findViewById(R.id.tv_vote_score)
         val btnUpvote: AppCompatImageButton = itemView.findViewById(R.id.btn_upvote)
         val btnDownvote: AppCompatImageButton = itemView.findViewById(R.id.btn_downvote)

@@ -1,6 +1,5 @@
 package com.alvinfungai.flower.data.repository
 
-import android.util.Log
 import com.alvinfungai.flower.data.model.Project
 import com.alvinfungai.flower.data.model.ProjectWithTech
 import com.alvinfungai.flower.data.model.Technology
@@ -101,5 +100,4 @@ class SupabaseProjectRepository(private val client: SupabaseClient) : ProjectRep
             .select()
             .decodeList<Project>()
     }
-
 }
