@@ -49,7 +49,7 @@ class ProjectDetailViewModelTest {
     fun `when fetching details is successful, state is Success`() = runTest {
         // Arrange
         val tech1 = Technology("t1", "Kotlin")
-        val project = Project("p1", "user1", "url", "test", "desc", 0)
+        val project = Project(id = "p1", userId = "user1", repoUrl = "url", title = "test", description = "desc", stars = 0, forks = 0, openIssues = 0, repoUpdatedAt = "", voteScore = 0)
 
         fakeRepo.seedData(listOf(project), listOf(tech1))
         fakeRepo.createProject(project, listOf("t1"))

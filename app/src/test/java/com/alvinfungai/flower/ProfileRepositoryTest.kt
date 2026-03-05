@@ -38,7 +38,7 @@ class ProfileRepositoryTest {
             if (initial is ProfileUiState.Loading) awaitItem()
 
             // 2. Make the call
-            viewModel.updateUserProfile("Updated Name", "New Bio")
+            viewModel.updateUserProfile("Updated Name", "UpdatedGithubUsername","New Bio")
 
             // 3. IMPORTANT: Tell the test to execute all pending coroutines
             advanceUntilIdle()

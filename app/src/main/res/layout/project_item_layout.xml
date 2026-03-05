@@ -41,13 +41,70 @@
             android:layout_marginTop="4dp"
             android:layout_marginEnd="16dp"
             android:ellipsize="end"
-            android:maxLines="3"
+            android:maxLines="2"
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
             android:textColor="?attr/colorOnSurfaceVariant"
             app:layout_constraintEnd_toStartOf="@+id/vote_container"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_title"
-            tools:text="This is a detailed description of the project that might span multiple lines." />
+            tools:text="Detailed description of the project." />
+
+        <LinearLayout
+            android:id="@+id/stats_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/divider"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_description">
+
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:src="@drawable/ic_star"
+                app:tint="?android:attr/textColorSecondary" />
+
+            <TextView
+                android:id="@+id/tv_stars"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:textSize="12sp"
+                android:textColor="?android:attr/textColorSecondary"
+                tools:text="1.2k" />
+
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/ic_fork"
+                app:tint="?android:attr/textColorSecondary" />
+
+            <TextView
+                android:id="@+id/tv_forks"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:textSize="12sp"
+                android:textColor="?android:attr/textColorSecondary"
+                tools:text="245" />
+
+            <TextView
+                android:id="@+id/tv_updated_at"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:textSize="11sp"
+                android:textColor="?android:attr/textColorSecondary"
+                tools:text="Updated 2d ago" />
+
+        </LinearLayout>
 
         <View
             android:id="@+id/divider"
@@ -55,9 +112,9 @@
             android:layout_height="0dp"
             android:layout_marginEnd="12dp"
             android:background="#E0E0E0"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/vote_container"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toStartOf="@id/vote_container" />
 
         <LinearLayout
             android:id="@+id/vote_container"
@@ -74,9 +131,6 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Upvote button"
-                android:padding="4dp"
-                android:scaleType="fitCenter"
                 android:src="@drawable/ic_arrow_up"
                 app:tint="@color/vote_tint_upvote" />
 
@@ -84,8 +138,6 @@
                 android:id="@+id/tv_vote_score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="2dp"
-                android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 tools:text="42" />
@@ -95,11 +147,114 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Downvote button"
-                android:padding="4dp"
-                android:scaleType="fitCenter"
                 android:src="@drawable/ic_arrow_down"
                 app:tint="@color/vote_tint_downvote" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
+
+<!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<com.google.android.material.card.MaterialCardView-->
+<!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:layout_marginHorizontal="16dp"-->
+<!--    android:layout_marginVertical="8dp"-->
+<!--    app:cardCornerRadius="5dp"-->
+<!--    app:cardBackgroundColor="@color/cardview_light_background"-->
+<!--    app:cardMaxElevation="0dp"-->
+<!--    app:cardElevation="1dp"-->
+<!--    app:strokeColor="#FEFEFE"-->
+<!--    app:strokeWidth="1dp">-->
+
+<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:padding="16dp">-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tv_title"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginEnd="16dp"-->
+<!--            android:ellipsize="end"-->
+<!--            android:maxLines="1"-->
+<!--            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"-->
+<!--            android:textColor="?attr/colorOnSurface"-->
+<!--            android:textStyle="bold"-->
+<!--            app:layout_constraintEnd_toStartOf="@+id/vote_container"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            tools:text="Project Alpha" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tv_description"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="4dp"-->
+<!--            android:layout_marginEnd="16dp"-->
+<!--            android:ellipsize="end"-->
+<!--            android:maxLines="3"-->
+<!--            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"-->
+<!--            android:textColor="?attr/colorOnSurfaceVariant"-->
+<!--            app:layout_constraintEnd_toStartOf="@+id/vote_container"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/tv_title"-->
+<!--            tools:text="This is a detailed description of the project that might span multiple lines." />-->
+
+<!--        <View-->
+<!--            android:id="@+id/divider"-->
+<!--            android:layout_width="1dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_marginEnd="12dp"-->
+<!--            android:background="#E0E0E0"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toStartOf="@id/vote_container"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--        <LinearLayout-->
+<!--            android:id="@+id/vote_container"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:gravity="center"-->
+<!--            android:orientation="vertical"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent">-->
+
+<!--            <ImageButton-->
+<!--                android:id="@+id/btn_upvote"-->
+<!--                android:layout_width="40dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:background="?attr/selectableItemBackgroundBorderless"-->
+<!--                android:contentDescription="Upvote button"-->
+<!--                android:padding="4dp"-->
+<!--                android:scaleType="fitCenter"-->
+<!--                android:src="@drawable/ic_arrow_up"-->
+<!--                app:tint="@color/vote_tint_upvote" />-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/tv_vote_score"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginVertical="2dp"-->
+<!--                android:textAppearance="@style/TextAppearance.Material3.LabelLarge"-->
+<!--                android:textSize="16sp"-->
+<!--                android:textStyle="bold"-->
+<!--                tools:text="42" />-->
+
+<!--            <ImageButton-->
+<!--                android:id="@+id/btn_downvote"-->
+<!--                android:layout_width="40dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:background="?attr/selectableItemBackgroundBorderless"-->
+<!--                android:contentDescription="Downvote button"-->
+<!--                android:padding="4dp"-->
+<!--                android:scaleType="fitCenter"-->
+<!--                android:src="@drawable/ic_arrow_down"-->
+<!--                app:tint="@color/vote_tint_downvote" />-->
+<!--        </LinearLayout>-->
+<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+<!--</com.google.android.material.card.MaterialCardView>-->

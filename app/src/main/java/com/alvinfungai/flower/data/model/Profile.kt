@@ -9,5 +9,6 @@ data class Profile(
     val email: String? = null,
     val bio: String? = null,
     @SerialName("full_name") val fullName: String? = null,
-    @SerialName("avatar_url") val avatarUrl: String? = null
+    @SerialName("avatar_url") val avatarUrl: String? = null,
+    @SerialName("github_username") val githubUsername: String? = null
 )

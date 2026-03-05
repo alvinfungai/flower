@@ -64,6 +64,8 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
         val btnSaveProfile = view.findViewById<Button>(R.id.btn_save_profile)
         val tilFullName = view.findViewById<TextInputLayout>(R.id.til_full_name)
         val etFullName = view.findViewById<EditText>(R.id.et_full_name)
+        val tilGithubUsername = view.findViewById<TextInputLayout>(R.id.til_github_username)
+        val etGithubUsername = view.findViewById<EditText>(R.id.et_github_username)
         val tilBio = view.findViewById<TextInputLayout>(R.id.til_bio)
         val etBio = view.findViewById<EditText>(R.id.et_bio)
         val imgProfile = view.findViewById<CircleImageView>(R.id.img_edit_profile)
@@ -120,13 +122,18 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
 
         btnSaveProfile.setOnClickListener {
             val name = etFullName.text.toString().trim()
+            val githubName = etGithubUsername.text.toString().trim()
             val bio = etBio.text.toString().trim()
 
             if (name.isEmpty()) {
                 tilFullName.error = "Name is required"
                 return@setOnClickListener
             }
-            viewModel.updateUserProfile(name, bio)
+            if (githubName.isEmpty()) {
+                tilFullName.error = "Github username is required"
+                return@setOnClickListener
+            }
+            viewModel.updateUserProfile(name, githubName,bio)
         }
     }
 }
